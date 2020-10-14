@@ -6,12 +6,10 @@ import com.mongodb.client.MongoDatabase;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.MapperOptions;
-import dev.morphia.query.Query;
+import dev.morphia.query.internal.MorphiaCursor;
 import org.bson.UuidRepresentation;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.UUID;
 
 import static com.mongodb.MongoClientSettings.builder;
 
@@ -34,17 +32,29 @@ public class ReproducerTest {
 
     @Test
     public void reproduce() {
-        datastore.getMapper().map(Media.class, MediaItem.class);
-        UUID id = UUID.fromString("8a51c09b-843b-4b76-ac33-db3701f180f4");
+        datastore.getMapper().map(Dummy.class, DummyRef.class);
 
-        Media media = datastore.find(Media.class).first();
-        Assert.assertNotNull(media);
-        Assert.assertNotNull(media.mediaItem);
-        Assert.assertEquals(media.mediaItem.id, id);
+        generate();
 
-        Dummy dummy = datastore.find(Dummy.class).first();
-        Assert.assertNotNull(dummy);
-        Assert.assertNotNull(dummy.getDummyRef());
-        Assert.assertEquals(dummy.getDummyRef().getId(), id);
+        final MorphiaCursor<Dummy> dummyCursor = datastore.find(Dummy.class).iterator();
+        final Dummy oldMorphiaVersion = dummyCursor.next();
+        final Dummy newMorphiaVersion = dummyCursor.next();
+
+        // cannot find reference document if the document is saved with the ol§d version
+        Assert.assertNotNull(oldMorphiaVersion);
+        Assert.assertNull(oldMorphiaVersion.getDummyRef());
+
+        // finds reference document if the document is saved with the new version
+        Assert.assertNotNull(newMorphiaVersion);
+        Assert.assertNotNull(newMorphiaVersion.getDummyRef());
+    }
+
+    public void generate() {
+        Uid uuid = new Uid("8a51c09b-843b-4b76-ac33-db3701f180f6");
+        Uid uuid2 = new Uid("8a51c09b-843b-4b76-ac33-db3701f180f7");
+
+        Dummy dummy = new Dummy(uuid, new DummyRef(uuid2));
+        datastore.save(dummy.getDummyRef());
+        datastore.save(dummy);
     }
 }

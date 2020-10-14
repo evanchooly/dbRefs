@@ -10,7 +10,7 @@ import java.util.UUID;
 @Entity(value = "Dummy", useDiscriminator = false)
 public class Dummy {
     @Id
-    private final UUID id;
+    private final Uid id;
 
     @Reference(value = "dummyRef", ignoreMissing = true)
     private final DummyRef dummyRef;
@@ -20,7 +20,7 @@ public class Dummy {
         dummyRef = null;
     }
 
-    public Dummy(UUID id, DummyRef dummyRef) {
+    public Dummy(Uid id, DummyRef dummyRef) {
         this.id = id;
         this.dummyRef = dummyRef;
     }
@@ -29,7 +29,7 @@ public class Dummy {
         return dummyRef;
     }
 
-    public UUID getId() {
+    public Uid getId() {
         return id;
     }
 

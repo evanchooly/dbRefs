@@ -9,17 +9,17 @@ import java.util.UUID;
 @Entity(value = "DummyRef", useDiscriminator = false)
 public class DummyRef {
     @Id
-    private final UUID id;
+    private final Uid id;
 
     protected DummyRef() {
         id = null;
     }
 
-    public DummyRef(UUID id) {
+    public DummyRef(Uid id) {
         this.id = id;
     }
 
-    public UUID getId() {
+    public Uid getId() {
         return id;
     }
 
