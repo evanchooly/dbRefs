@@ -12,7 +12,7 @@ public class Dummy {
     @Id
     private final Uid id;
 
-    @Reference(value = "dummyRef", ignoreMissing = true)
+    @Reference(value = "dummyRef")
     private final DummyRef dummyRef;
 
     protected Dummy() {

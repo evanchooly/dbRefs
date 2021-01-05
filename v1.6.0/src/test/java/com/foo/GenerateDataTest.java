@@ -12,7 +12,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class GenerateDataTest {
-    private static final String TEST_DB_NAME = "morphia_test";
+    private static final String TEST_DB_NAME = "morphia_test_16";
     private static com.mongodb.MongoClient mongoClient;
     private MongoDatabase database;
     private Datastore datastore;
